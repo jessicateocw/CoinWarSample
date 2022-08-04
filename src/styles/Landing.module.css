@@ -1,0 +1,189 @@
+@font-face {
+  font-family: "Product Sans";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Open Sans"), local("OpenSans"),
+    url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2)
+      format("woff2");
+}
+
+.App-header {
+  /* background-color: #282c34; */
+  min-height: 10vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: right;
+  font-size: calc(10px + 2vmin);
+  padding-right: 44px;
+  color: white;
+}
+
+.Game-header {
+  /* background-color: #282c34; */
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  padding-right: 44px;
+  color: white;
+}
+
+.logo {
+  position: absolute;
+  width: 137px;
+  height: 30px;
+  left: 44px;
+  top: 34px;
+
+  font-family: "Microsoft YaHei UI";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.015em;
+
+  color: #ffe401;
+
+  text-shadow: 0px 4px 4px rgba(255, 255, 255, 0.4);
+}
+
+.header-text {
+  margin-left: 10px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+  color: #fed1c1;
+}
+
+.play {
+  width: 130px;
+  height: 40px;
+  padding-bottom: 10px;
+
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+}
+
+.main_button {
+  width: 200px;
+  height: 40px;
+  padding-bottom: 10px;
+
+  font-weight: 500;
+  font-size: 18px;
+  letter-spacing: -0.015em;
+}
+
+/* hero */
+.hero-heading1 {
+  /* COINWARS */
+
+  font-family: "Microsoft YaHei UI";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 81px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  letter-spacing: -0.015em;
+
+  color: #ffe401;
+
+  text-shadow: 0px 4px 4px rgba(255, 255, 255, 0.4);
+}
+
+.body {
+  height: 90vh;
+}
+/* 
+import solana_img from "../assets/solana.png";
+import dogecoin_img from "../assets/dogecoin.png";
+import tether_img from "../assets/tether.png"; */
+
+.solana_coin {
+  position: absolute;
+
+  right: 400px;
+  top: 340px;
+
+  width: 200px;
+  height: 200px;
+  background-size: contain;
+  background-image: url(../assets/solana.png);
+  animation: spin 3s cubic-bezier(0.3, 2, 0.4, 0.8) infinite both;
+  transform-style: preserve-3d;
+  vertical-align: middle;
+}
+
+.doge_coin {
+  position: absolute;
+
+  right: 180px;
+  top: 300px;
+
+  width: 180px;
+  height: 180px;
+  background-size: contain;
+  background-image: url(../assets/dogecoin.png);
+  animation: spin 4s cubic-bezier(0.3, 2, 0.4, 0.8) infinite both;
+  transform-style: preserve-3d;
+  vertical-align: middle;
+}
+
+.tether_coin {
+  position: absolute;
+
+  right: 320px;
+  top: 180px;
+
+  width: 150px;
+  height: 150px;
+  background-size: contain;
+  background-image: url(../assets/tether.png);
+  animation: spin 5s cubic-bezier(0.3, 2, 0.4, 0.8) infinite both;
+  transform-style: preserve-3d;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0%,
+  10% {
+    transform: rotate(-10deg) perspective(400px);
+  }
+  90%,
+  100% {
+    transform: rotate(-10deg) perspective(400px) rotateY(180deg);
+  }
+}
+
+.heroContent {
+  display: flex;
+  justify-content: right;
+}
+
+.heroStatement {
+  display: flex;
+  position: absolute;
+  width: 600px;
+  height: 300px;
+  font-size: 52px;
+  left: 70px;
+  top: 340px;
+  text-align: left;
+}
+
+.feature_content {
+  display: flex;
+  padding-left: 20px;
+  padding-right: 20px;
+}
