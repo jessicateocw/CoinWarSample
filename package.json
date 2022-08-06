@@ -2,6 +2,17 @@
   "name": "coin-web",
   "version": "0.1.0",
   "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src",
+    "public",
+    ".gitignore",
+    "config-overrides.js",
+    "package.json",
+    "README.md"
+  ],
   "dependencies": {
     "@craco/craco": "^6.4.5",
     "@solana-mobile/wallet-adapter-mobile": "^0.9.0",
@@ -21,12 +32,25 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.0"
   },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^14.4.1",
+    "@types/jest": "^28.1.6",
+    "@types/node": "^18.6.3",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.1.11",
+    "react-scripts": "^5.0.0",
+    "source-map-loader": "^4.0.0"
+  },
   "browser": {
     "crypto": false,
     "stream": false
   },
   "scripts": {
-    "dev": "craco start",
+    "dev": "react-app-rewired start",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",

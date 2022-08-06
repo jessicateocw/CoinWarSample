@@ -22,7 +22,7 @@ import {
 import { clusterApiUrl } from "@solana/web3.js";
 import { useNavigate } from "react-router-dom";
 
-import "@solana/wallet-adapter-react-ui/styles.css";
+require("@solana/wallet-adapter-react-ui/styles.css");
 const network = WalletAdapterNetwork.Devnet;
 
 const Launch = ({ children }) => {
