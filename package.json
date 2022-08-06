@@ -4,6 +4,12 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.5",
+    "@solana-mobile/wallet-adapter-mobile": "^0.9.0",
+    "@solana/wallet-adapter-base": "^0.9.10",
+    "@solana/wallet-adapter-react": "^0.15.9",
+    "@solana/wallet-adapter-react-ui": "^0.9.12",
+    "@solana/wallet-adapter-wallets": "^0.17.1",
+    "@solana/web3.js": "^1.50.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
@@ -14,6 +20,10 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.0"
+  },
+  "browser": {
+    "crypto": false,
+    "stream": false
   },
   "scripts": {
     "dev": "craco start",
