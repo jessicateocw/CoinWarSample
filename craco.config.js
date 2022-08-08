@@ -17,12 +17,14 @@ module.exports = {
       },
     },
   ],
-  resolve: {
-    fallback: {
-      assert: require.resolve("assert"),
-      buffer: require.resolve("buffer"),
-      stream: require.resolve("stream-browserify"),
-      crypto: require.resolve("crypto-browserify"),
+  webpack: {
+    configure: (webpackConfig, { env, paths }) => {
+      // eslint-disable-next-line no-param-reassign
+      webpackConfig.resolve.fallback = {
+        stream: false,
+        crypto: false,
+      };
+      return webpackConfig;
     },
   },
   ignoreWarnings: [/Failed to parse source map/],

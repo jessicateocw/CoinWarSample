@@ -3,7 +3,12 @@ import styles from "../styles/Landing.module.css";
 import { Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
-const Header = ({ game, executeScroll }) => {
+interface Header {
+  game: Boolean;
+  executeScroll: any;
+}
+
+const Header = ({ game, executeScroll }: Header) => {
   const navigate = useNavigate();
 
   const inLanding = () => {
@@ -11,7 +16,7 @@ const Header = ({ game, executeScroll }) => {
       <>
         <Button
           type="text"
-          className={styles["header-text"]}
+          className={styles.headerText}
           onClick={() => {
             executeScroll();
           }}
@@ -35,7 +40,6 @@ const Header = ({ game, executeScroll }) => {
     return (
       <>
         <Button
-          type="secondary"
           className={styles.play}
           onClick={() => {
             navigate("start");

@@ -1,4 +1,5 @@
 const { ProvidePlugin } = require("webpack");
+const CracoLessPlugin = require("craco-less");
 
 module.exports = function (config, env) {
   return {
@@ -15,10 +16,20 @@ module.exports = function (config, env) {
       ],
     },
     plugins: [
-      ...config.plugins,
-      new ProvidePlugin({
-        process: "process/browser",
-      }),
+      {
+        plugin: CracoLessPlugin,
+        options: {
+          lessLoaderOptions: {
+            lessOptions: {
+              modifyVars: {
+                "@primary-color": "#ff652f",
+                "@secondary-color": "#FFFFFF",
+              },
+              javascriptEnabled: true,
+            },
+          },
+        },
+      },
     ],
     resolve: {
       ...config.resolve,

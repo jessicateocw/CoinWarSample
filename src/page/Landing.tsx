@@ -1,15 +1,16 @@
 import React, { useRef } from "react";
 import Header from "./Header";
-import twitterLogo from "../assets/twitter-logo.svg";
 import styles from "../styles/Landing.module.css";
 
 import { Card, Col, Row } from "antd";
 
 const Homepage = () => {
-  const myRef = useRef(null);
+  const myRef = useRef<null | HTMLDivElement>(null);
 
   const executeScroll = () => {
-    myRef.current.scrollIntoView();
+    if (myRef.current) {
+      myRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   // Constants
@@ -18,7 +19,7 @@ const Homepage = () => {
 
   return (
     <div id="status">
-      <Header executeScroll={executeScroll} />
+      <Header executeScroll={executeScroll} game={false} />
       <HomeContent />
       <FeaturesContent myRef={myRef} />
       <div className="footer-container">
@@ -51,7 +52,7 @@ const HomeContent = () => {
   );
 };
 
-const FeaturesContent = ({ myRef }) => {
+const FeaturesContent = ({ myRef }: any) => {
   return (
     <div id="features" className={styles.body} ref={myRef}>
       <h1>Multiple Pools To Join</h1>
