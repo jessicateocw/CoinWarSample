@@ -5,6 +5,7 @@ import "./App.less";
 import Homepage from "./page/Landing";
 import Launch from "./page/Launch";
 import Game from "./page/Game";
+import Admin from "./page/Admin";
 
 export const App: FC = () => {
   return (
@@ -14,6 +15,7 @@ export const App: FC = () => {
           <Route path="/" element={<Homepage />} />
           <Route path="/start" element={<Launch />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </div>
     </Router>

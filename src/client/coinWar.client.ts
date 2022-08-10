@@ -42,4 +42,30 @@ export class CoinClient extends AccountUtils {
       );
     }
   }
+
+  async createPool(manager: PublicKey, poolName: number, mintKey: PublicKey) {
+    const [poolTokenAcccount] = await this.findProgramAddress(
+      [
+        manager.toBytes(),
+        Buffer.from(anchor.utils.bytes.utf8.encode("pool-token")),
+      ],
+      this.coinProgram.programId
+    );
+
+    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(anchor.utils.bytes.utf8.encode(""))],
+      this.coinProgram.programId
+    );
+
+    const createPoolIx = await this.coinProgram.methods
+      .createPool(poolName)
+      .accounts({
+        owner: manager,
+        pool: poolAccount,
+        poolTokenAcccount,
+        mintAddress: poolTokenAcccount,
+      })
+      .rpc();
+    return { createPoolIx, poolTokenAcccount };
+  }
 }

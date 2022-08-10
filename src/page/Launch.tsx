@@ -37,7 +37,10 @@ const network = WalletAdapterNetwork.Devnet;
 const Launch = () => {
   // const { publicKey, signMessage } = useWallet();
   const [walletAddress, setWalletAddress] = useState("");
+  const [inWallet, setInWallet] = useState(false);
   const wallet = useAnchorWallet();
+
+  const [connectString, setConnectString] = useState("CONNECT WALLET");
 
   // You can also provide a custom RPC endpoint.
   const endpoint = useMemo(() => clusterApiUrl(network), [network]);
@@ -54,8 +57,14 @@ const Launch = () => {
   );
 
   useEffect(() => {
+    //check solana in windows
+  }, []);
+
+  useEffect(() => {
     //Check if the walletAddress is updated
     setWalletAddress("update here");
+    setInWallet(true);
+    setConnectString("enter");
   }, [walletAddress]);
 
   const handleClick = (e: Event) => {
@@ -68,7 +77,7 @@ const Launch = () => {
       console.log("enter button");
       button.click();
     }
-
+    setConnectString("... LOADING");
     //if no wallet selected, alert user to try again.
     // setWalletAddress(true);
     // console.log("enter", button);
@@ -80,9 +89,9 @@ const Launch = () => {
         <WalletModalProvider>
           <div
             style={{
-              display: "flex",
+              display: inWallet ? "flex" : "none",
               justifyContent: "flex-end",
-              marginRight: "15px",
+              marginRight: "30px",
               gap: "15px",
               marginTop: "10px",
             }}
@@ -107,14 +116,14 @@ const Launch = () => {
           handleClick(event);
         }}
       >
-        CONNECT WALLET
+        {connectString}
       </Button>
     </div>
   );
 
   return (
     <>
-      {walletAddress.length > 0 ? (
+      {inWallet ? (
         <>
           {" "}
           <Header game={true} executeScroll={undefined} />
@@ -123,7 +132,7 @@ const Launch = () => {
         renderLaunch
       )}
       {walletContent}
-      {walletAddress.length > 0 && (
+      {inWallet && (
         <>
           <Game />
           <div className="footer-container">
