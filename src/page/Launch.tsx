@@ -63,7 +63,7 @@ const Launch = () => {
   useEffect(() => {
     //Check if the walletAddress is updated
     setWalletAddress("update here");
-    setInWallet(true);
+    //setInWallet(true);
     setConnectString("enter");
   }, [walletAddress]);
 
@@ -77,6 +77,7 @@ const Launch = () => {
       console.log("enter button");
       button.click();
     }
+    setInWallet(true);
     setConnectString("... LOADING");
     //if no wallet selected, alert user to try again.
     // setWalletAddress(true);

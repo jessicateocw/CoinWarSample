@@ -16,7 +16,7 @@
           "isSigner": false
         },
         {
-          "name": "poolTokenAcccount",
+          "name": "poolTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -46,7 +46,8 @@
           "name": "poolName",
           "type": "u8"
         }
-      ]
+      ],
+      "returns": null
     },
     {
       "name": "createUser",
@@ -87,7 +88,8 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [],
+      "returns": null
     },
     {
       "name": "selectWinningPool",
@@ -104,7 +106,13 @@
           "type": "bytes"
         },
         {
-          "name": "poolTotal",
+          "name": "poolPredictions",
+          "type": {
+            "vec": "f64"
+          }
+        },
+        {
+          "name": "poolCoinPrice",
           "type": {
             "vec": "f64"
           }
@@ -165,7 +173,35 @@
           "name": "prizeAmount",
           "type": "f64"
         }
-      ]
+      ],
+      "returns": null
+    },
+    {
+      "name": "makePrediction",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "prediction",
+          "type": "f64"
+        }
+      ],
+      "returns": null
     },
     {
       "name": "withdraw",
@@ -231,7 +267,8 @@
           "name": "amount",
           "type": "f64"
         }
-      ]
+      ],
+      "returns": null
     },
     {
       "name": "deposit",
@@ -262,11 +299,6 @@
           "isSigner": false
         },
         {
-          "name": "transaction",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -286,8 +318,13 @@
         {
           "name": "amount",
           "type": "f64"
+        },
+        {
+          "name": "prediction",
+          "type": "f64"
         }
-      ]
+      ],
+      "returns": null
     }
   ],
   "accounts": [
@@ -315,6 +352,10 @@
           {
             "name": "name",
             "type": "u8"
+          },
+          {
+            "name": "averagePrediction",
+            "type": "f64"
           }
         ]
       }
@@ -372,46 +413,6 @@
       }
     },
     {
-      "name": "UserGameHistory",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "gameId",
-            "type": "u64"
-          },
-          {
-            "name": "winning",
-            "type": "f64"
-          },
-          {
-            "name": "userId",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "GameHistory",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "gameId",
-            "type": "u64"
-          },
-          {
-            "name": "winningPool",
-            "type": "u8"
-          },
-          {
-            "name": "winning",
-            "type": "f64"
-          }
-        ]
-      }
-    },
-    {
       "name": "User",
       "type": {
         "kind": "struct",
@@ -419,6 +420,10 @@
           {
             "name": "pool",
             "type": "u8"
+          },
+          {
+            "name": "lastPrediction",
+            "type": "f64"
           },
           {
             "name": "balance",
@@ -533,9 +538,19 @@
       "code": 6008,
       "name": "PoolsInWrongOrder",
       "msg": "Pools in wrong order."
+    },
+    {
+      "code": 6009,
+      "name": "PoolsDataSizeDoNotMatch",
+      "msg": "Pool data sizes do not match."
+    },
+    {
+      "code": 6010,
+      "name": "DepositInsufficient",
+      "msg": "Minimum Deposit amount is 1 sol."
     }
   ],
   "metadata": {
-    "address": "AQNeXDvz9BzvUwrspXeyMV8WUdu6HbyRyjj1SdKEkCbQ"
+    "address": "FNUYoJBy4jY3HqGJ6tFb8koxv9n3BjvqApgNBNpNjc9v"
   }
 }

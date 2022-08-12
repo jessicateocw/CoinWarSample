@@ -4,7 +4,7 @@ import * as idl from "../data/coin_war.json";
 import { Wallet } from "@project-serum/anchor";
 
 const COIN_PROG_ID = new PublicKey(
-  "AQNeXDvz9BzvUwrspXeyMV8WUdu6HbyRyjj1SdKEkCbQ"
+  "FKZMVn2QmDkpM87EAVtfdbcbmEpkwbnsyTWTzAWAKk3g"
 );
 
 export const conn: Connection = new Connection("https://api.devnet.solana.com");

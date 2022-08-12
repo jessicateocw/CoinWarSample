@@ -16,7 +16,7 @@ export type CoinWar = {
           "isSigner": false
         },
         {
-          "name": "poolTokenAcccount",
+          "name": "poolTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -104,7 +104,13 @@ export type CoinWar = {
           "type": "bytes"
         },
         {
-          "name": "poolTotal",
+          "name": "poolPredictions",
+          "type": {
+            "vec": "f64"
+          }
+        },
+        {
+          "name": "poolCoinPrice",
           "type": {
             "vec": "f64"
           }
@@ -163,6 +169,32 @@ export type CoinWar = {
         },
         {
           "name": "prizeAmount",
+          "type": "f64"
+        }
+      ]
+    },
+    {
+      "name": "makePrediction",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "prediction",
           "type": "f64"
         }
       ]
@@ -262,11 +294,6 @@ export type CoinWar = {
           "isSigner": false
         },
         {
-          "name": "transaction",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -285,6 +312,10 @@ export type CoinWar = {
       "args": [
         {
           "name": "amount",
+          "type": "f64"
+        },
+        {
+          "name": "prediction",
           "type": "f64"
         }
       ]
@@ -315,6 +346,10 @@ export type CoinWar = {
           {
             "name": "name",
             "type": "u8"
+          },
+          {
+            "name": "averagePrediction",
+            "type": "f64"
           }
         ]
       }
@@ -372,46 +407,6 @@ export type CoinWar = {
       }
     },
     {
-      "name": "userGameHistory",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "gameId",
-            "type": "u64"
-          },
-          {
-            "name": "winning",
-            "type": "f64"
-          },
-          {
-            "name": "userId",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "gameHistory",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "gameId",
-            "type": "u64"
-          },
-          {
-            "name": "winningPool",
-            "type": "u8"
-          },
-          {
-            "name": "winning",
-            "type": "f64"
-          }
-        ]
-      }
-    },
-    {
       "name": "user",
       "type": {
         "kind": "struct",
@@ -419,6 +414,10 @@ export type CoinWar = {
           {
             "name": "pool",
             "type": "u8"
+          },
+          {
+            "name": "lastPrediction",
+            "type": "f64"
           },
           {
             "name": "balance",
@@ -533,6 +532,16 @@ export type CoinWar = {
       "code": 6008,
       "name": "PoolsInWrongOrder",
       "msg": "Pools in wrong order."
+    },
+    {
+      "code": 6009,
+      "name": "PoolsDataSizeDoNotMatch",
+      "msg": "Pool data sizes do not match."
+    },
+    {
+      "code": 6010,
+      "name": "DepositInsufficient",
+      "msg": "Minimum Deposit amount is 1 sol."
     }
   ]
 };
@@ -555,7 +564,7 @@ export const IDL: CoinWar = {
           "isSigner": false
         },
         {
-          "name": "poolTokenAcccount",
+          "name": "poolTokenAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -643,7 +652,13 @@ export const IDL: CoinWar = {
           "type": "bytes"
         },
         {
-          "name": "poolTotal",
+          "name": "poolPredictions",
+          "type": {
+            "vec": "f64"
+          }
+        },
+        {
+          "name": "poolCoinPrice",
           "type": {
             "vec": "f64"
           }
@@ -702,6 +717,32 @@ export const IDL: CoinWar = {
         },
         {
           "name": "prizeAmount",
+          "type": "f64"
+        }
+      ]
+    },
+    {
+      "name": "makePrediction",
+      "accounts": [
+        {
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "prediction",
           "type": "f64"
         }
       ]
@@ -801,11 +842,6 @@ export const IDL: CoinWar = {
           "isSigner": false
         },
         {
-          "name": "transaction",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
@@ -824,6 +860,10 @@ export const IDL: CoinWar = {
       "args": [
         {
           "name": "amount",
+          "type": "f64"
+        },
+        {
+          "name": "prediction",
           "type": "f64"
         }
       ]
@@ -854,6 +894,10 @@ export const IDL: CoinWar = {
           {
             "name": "name",
             "type": "u8"
+          },
+          {
+            "name": "averagePrediction",
+            "type": "f64"
           }
         ]
       }
@@ -911,46 +955,6 @@ export const IDL: CoinWar = {
       }
     },
     {
-      "name": "userGameHistory",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "gameId",
-            "type": "u64"
-          },
-          {
-            "name": "winning",
-            "type": "f64"
-          },
-          {
-            "name": "userId",
-            "type": "u64"
-          }
-        ]
-      }
-    },
-    {
-      "name": "gameHistory",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "gameId",
-            "type": "u64"
-          },
-          {
-            "name": "winningPool",
-            "type": "u8"
-          },
-          {
-            "name": "winning",
-            "type": "f64"
-          }
-        ]
-      }
-    },
-    {
       "name": "user",
       "type": {
         "kind": "struct",
@@ -958,6 +962,10 @@ export const IDL: CoinWar = {
           {
             "name": "pool",
             "type": "u8"
+          },
+          {
+            "name": "lastPrediction",
+            "type": "f64"
           },
           {
             "name": "balance",
@@ -1072,6 +1080,16 @@ export const IDL: CoinWar = {
       "code": 6008,
       "name": "PoolsInWrongOrder",
       "msg": "Pools in wrong order."
+    },
+    {
+      "code": 6009,
+      "name": "PoolsDataSizeDoNotMatch",
+      "msg": "Pool data sizes do not match."
+    },
+    {
+      "code": 6010,
+      "name": "DepositInsufficient",
+      "msg": "Minimum Deposit amount is 1 sol."
     }
   ]
 };

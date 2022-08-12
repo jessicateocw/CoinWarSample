@@ -25,7 +25,7 @@ const Winner = () => {
         onClick={() => {
           setIsModalVisible(true);
         }}
-        disabled={isWinner}
+        disabled={!isWinner}
       >
         Claim reward!
       </Button>
