@@ -1,6 +1,16 @@
-import { Button, Input, message, Modal, Space } from "antd";
+import {
+  Button,
+  Input,
+  message,
+  Modal,
+  Space,
+  Row,
+  Col,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { CountdownTimer } from "./component/Timer";
+import "../styles/Game.less";
 
 interface PoolData {
   poolName: string;
@@ -8,24 +18,7 @@ interface PoolData {
   totalAmount: number;
 }
 
-//TODO: Should called from DB
-var datajson = [
-  { poolName: "Solana", userGroup: ["userAdd"], totalAmount: 100 },
-  { poolName: "Tether", userGroup: ["userAdd"], totalAmount: 20 },
-  { poolName: "Ethereum", userGroup: ["userAdd"], totalAmount: 40 },
-  { poolName: "BitCoin", userGroup: ["userAdd"], totalAmount: 100 },
-];
-
-//TODO: Should called from DB
-var game = {
-  id: 0,
-  // stringy Json type of startTime
-  startTime: "2022-07-26T07:46:36.611Z",
-  endTime: "2022-10-06T07:46:36.611Z",
-  prizeAmount: "100000 SOL",
-};
-
-const Game = () => {
+const Game = ({ pools, game }: any) => {
   var defaultPool: PoolData = {
     poolName: "",
     userGroup: [],
@@ -33,6 +26,7 @@ const Game = () => {
   };
   const [currentPool, setCurrentPool] = useState(defaultPool);
   const [predictionValue, setPredictionValue] = useState("");
+  const [stakeValue, setStakeValue] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -53,10 +47,17 @@ const Game = () => {
   };
 
   //Functions for the Modal Pop up.
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    parameter: string
+  ) => {
     const { value: inputValue } = e.target;
     e.preventDefault();
-    setPredictionValue(inputValue);
+    if (parameter == "predict") {
+      setPredictionValue(inputValue);
+    } else {
+      setStakeValue(inputValue);
+    }
   };
 
   const handleOk = () => {
@@ -81,10 +82,11 @@ const Game = () => {
     <div id="status">
       <CountdownTimer target={game.endTime} />
       <h1>Current Prize: {game.prizeAmount} </h1>
-      <Space>
-        {datajson.map((pool: PoolData, index: number) => (
+      <Space className="container">
+        {pools.map((pool: PoolData, index: number) => (
           <div>
             <Button
+              className="gameButton"
               onClick={() => {
                 handlePoolSelection(pool);
               }}
@@ -115,18 +117,29 @@ const Game = () => {
         ]}
       >
         {/* <div className={styles.solana_coin} /> */}
-        <p>Participants: {currentPool.userGroup.length}</p>
-        <p>current amount (est.): {currentPool.totalAmount}</p>
-        <Space direction="vertical">
-          <Input
-            size="large"
-            placeholder="Predict token price: "
-            onChange={(event: any) => {
-              handleChange(event);
-            }}
-          />
-          <br />
-        </Space>
+        <div className="model">
+          <p>Participants: {currentPool.userGroup.length}</p>
+          <p>Current amount (USDC): {currentPool.totalAmount}</p>
+          <Space direction="vertical" className="input">
+            <Typography>Predict token price:</Typography>
+            <Input
+              size="large"
+              placeholder="Predict token price: "
+              onChange={(event: any) => {
+                handleChange(event, "predict");
+              }}
+            />
+            <br />
+            <Typography>Insert Staking Amount:</Typography>
+            <Input
+              size="large"
+              placeholder="Insert Staking Amount: "
+              onChange={(event: any) => {
+                handleChange(event, "stake");
+              }}
+            />
+          </Space>
+        </div>
       </Modal>
     </div>
   );

@@ -26,6 +26,7 @@ import { clusterApiUrl, PublicKey } from "@solana/web3.js";
 import { useNavigate } from "react-router-dom";
 import Game from "./Game";
 import Header from "./Header";
+import Main from ".";
 
 require("@solana/wallet-adapter-react-ui/styles.css");
 
@@ -135,7 +136,7 @@ const Launch = () => {
       {walletContent}
       {inWallet && (
         <>
-          <Game />
+          <Main />
           <div className="footer-container">
             <a
               className="footer-text"

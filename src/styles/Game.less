@@ -1,0 +1,49 @@
+.input {
+  text-align: left;
+  padding: 2rem;
+  width: 100%;
+  /* font-weight: 700; */
+  font-size: 24px;
+}
+
+.model {
+  text-align: left;
+  padding: 2rem;
+  width: 100%;
+  /* font-weight: 700; */
+  font-size: 20px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 10px;
+  /* background-color: #2196f3; */
+  padding: 10px;
+  width: 100%;
+}
+
+.randomColor() {
+  @randomColor: `Math.floor(Math.random() * 16777215) .toString(16) `;
+  @colorHex: e(@randomColor);
+  @color: ~"#@{colorHex}";
+}
+
+.gameButton {
+  .randomColor();
+  border-radius: 25px;
+  background-color: @color;
+  /* padding-left: vw; */
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+  width: 100%;
+  height: 25vh;
+  color: white;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.title {
+  font-size: 30px;
+}
