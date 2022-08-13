@@ -3,6 +3,7 @@ import { Idl, AnchorProvider } from "@project-serum/anchor";
 import { Connection, PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
 import { AccountUtils } from "./common";
 import { CoinWar } from "./data/coin_war";
+import * as bs58 from "bs58";
 
 //global dev var
 const USDC_DEV = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
@@ -169,26 +170,28 @@ export class CoinClient extends AccountUtils {
   }
 
   async payWinningPoolUser(
-    owner: PublicKey,
+    // owner: PublicKey,
     initializer: PublicKey,
     poolName: string,
     prizeAmount: number
   ) {
-    const [userAccount] = await this.findProgramAddress(
-      [
-        initializer.toBytes(),
-        Buffer.from(anchor.utils.bytes.utf8.encode("user")),
-      ],
-      this.coinProgram.programId
-    );
-
-    const [userTokenAccount] = await this.findProgramAddress(
-      [
-        initializer.toBytes(),
-        Buffer.from(anchor.utils.bytes.utf8.encode("user_wallet")),
-      ],
-      this.coinProgram.programId
-    );
+    // const [userAccount] = await this.findProgramAddress(
+    //   [
+    //     initializer.toBytes(),
+    //     Buffer.from(anchor.utils.bytes.utf8.encode("user")),
+    //   ],
+    //   this.coinProgram.programId
+    // );
+    const userAccounts = await this.coinProgram.account.user.all([
+      {
+        memcmp: {
+          offset:
+            8 + // Discriminator.
+            4, // Topic string prefix.
+          bytes: bs58.encode(Buffer.from("Solana")),
+        },
+      },
+    ]);
 
     const [poolTokenAccount] = await this.findProgramAddress(
       [
@@ -203,17 +206,29 @@ export class CoinClient extends AccountUtils {
       this.coinProgram.programId
     );
 
-    const payWinningPoolUserIx = await this.coinProgram.methods
-      .payWinningPoolUser(poolName, prizeAmount)
-      .accounts({
-        owner: initializer,
-        user: userAccount,
-        userTokenAccount: userTokenAccount,
-        pool: poolAccount,
-        poolTokenAccount: poolTokenAccount,
-        mintAddress: USDC_DEV,
-      })
-      .rpc();
-    return { payWinningPoolUserIx };
+    userAccounts.every(async (userAccount) => {
+      const [userTokenAccount] = await this.findProgramAddress(
+        [
+          //userAccount.account.toBytes(),
+          Buffer.from(anchor.utils.bytes.utf8.encode("user_wallet")),
+        ],
+        this.coinProgram.programId
+      );
+
+      const payWinningPoolUserIx = await this.coinProgram.methods
+        .payWinningPoolUser(poolName, prizeAmount)
+        .accounts({
+          owner: initializer,
+          //user: userAccount.account.toBase58(),
+          userTokenAccount: userTokenAccount,
+          pool: poolAccount,
+          poolTokenAccount: poolTokenAccount,
+          mintAddress: USDC_DEV,
+        })
+        .rpc();
+      return { payWinningPoolUserIx };
+    });
+
+    //return { payWinningPoolUserIx };
   }
 }

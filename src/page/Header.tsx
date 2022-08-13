@@ -53,7 +53,9 @@ const Header = ({ game, executeScroll }: Header) => {
 
   return (
     <div className={styles["App-header"]}>
-      <h1 className={styles.logo}>COINWARS</h1>
+      <a className={styles.logo} href="/">
+        COINWARS
+      </a>
 
       {game ? inGame() : inLanding()}
     </div>

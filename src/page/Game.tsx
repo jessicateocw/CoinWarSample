@@ -11,6 +11,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { CountdownTimer } from "./component/Timer";
 import "../styles/Game.less";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { Wallet } from "@project-serum/anchor";
+import { initCoinClient } from "../client/common/init";
+import { CoinClient } from "../client/coinWar.client";
 
 interface PoolData {
   poolName: string;
@@ -30,6 +35,32 @@ const Game = ({ pools, game }: any) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  /**
+   * Wallet Configurations
+   **/
+  const wallet = useAnchorWallet();
+  const [client, setClient] = useState<CoinClient | null>(null);
+
+  // console.log(wallet);
+  useEffect(() => {
+    (async () => {
+      if (wallet) {
+        console.log(wallet);
+        try {
+          const coinClient = await initCoinClient(wallet as Wallet);
+
+          if (coinClient !== null) {
+            console.log("coinClient", coinClient);
+            setClient(coinClient);
+            //create user
+          }
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    })();
+  }, [wallet]);
+
   const success = () => {
     message.success("This is a success message" + predictionValue);
   };
@@ -38,12 +69,32 @@ const Game = ({ pools, game }: any) => {
     message.error("This is an error message");
   };
 
-  const enterUserToPool = () => {
-    //trigger client call to add user token to pool token account
+  const enterUserToPool = async () => {
+    //trigger client call to add user token to pool token account create user and deposit
 
-    //load success or non success warning
-    success();
-    handleOk();
+    if (client && wallet) {
+      try {
+        const { depositIx } = await client.deposit(
+          wallet.publicKey,
+          parseInt(stakeValue),
+          parseInt(predictionValue),
+          "Solana"
+        );
+
+        //check deposit status
+        //load success or non success warning
+        if (depositIx) {
+          handleOk();
+          success();
+        } else {
+          error();
+        }
+        console.log("Create depositIx:", depositIx);
+      } catch (err) {
+        console.log(err);
+        error();
+      }
+    }
   };
 
   //Functions for the Modal Pop up.
@@ -87,6 +138,7 @@ const Game = ({ pools, game }: any) => {
           <div>
             <Button
               className="gameButton"
+              key={index}
               onClick={() => {
                 handlePoolSelection(pool);
               }}
