@@ -2,10 +2,10 @@ import * as anchor from "@project-serum/anchor";
 import { Idl, AnchorProvider } from "@project-serum/anchor";
 import { Connection, PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
 import { AccountUtils } from "./common";
-import {CoinWar}  from "./data/coin_war";
+import { CoinWar } from "./data/coin_war";
 
 //global dev var
-const USDC_DEV = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU")
+const USDC_DEV = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
 
 export class CoinClient extends AccountUtils {
   wallet: anchor.Wallet;
@@ -46,8 +46,6 @@ export class CoinClient extends AccountUtils {
     }
   }
 
-  
-
   async createPool(manager: PublicKey, poolName: string, mintKey: PublicKey) {
     const [poolTokenAccount] = await this.findProgramAddress(
       [
@@ -57,13 +55,12 @@ export class CoinClient extends AccountUtils {
       this.coinProgram.programId
     );
 
-    
     const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(anchor.utils.bytes.utf8.encode(poolName))],
       this.coinProgram.programId
     );
 
-    const utf8 = require('utf8');
+    const utf8 = require("utf8");
 
     var pool = utf8.encode(poolName);
 
@@ -79,7 +76,7 @@ export class CoinClient extends AccountUtils {
     return { createPoolIx, poolTokenAccount };
   }
 
-  async createUser(initializer: PublicKey){
+  async createUser(initializer: PublicKey) {
     const [userAccount] = await this.findProgramAddress(
       [
         initializer.toBytes(),
@@ -96,17 +93,24 @@ export class CoinClient extends AccountUtils {
       this.coinProgram.programId
     );
 
-    const createUserIx = await this.coinProgram.methods.createUser().accounts({
-      initializer: initializer,
-      user: userAccount,
-      userTokenAccount:userTokenAccount,
-      mintAddress: USDC_DEV,
-    }).rpc();
-    return {createUserIx}
+    const createUserIx = await this.coinProgram.methods
+      .createUser()
+      .accounts({
+        initializer: initializer,
+        user: userAccount,
+        userTokenAccount: userTokenAccount,
+        mintAddress: USDC_DEV,
+      })
+      .rpc();
+    return { createUserIx };
   }
 
-
-  async deposit(initializer: PublicKey, amount: number, prediction: number, poolName: string) {
+  async deposit(
+    initializer: PublicKey,
+    amount: number,
+    prediction: number,
+    poolName: string
+  ) {
     const [userAccount] = await this.findProgramAddress(
       [
         initializer.toBytes(),
@@ -130,20 +134,86 @@ export class CoinClient extends AccountUtils {
       ],
       this.coinProgram.programId
     );
-    
+
     const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
       [Buffer.from(anchor.utils.bytes.utf8.encode(poolName))],
       this.coinProgram.programId
     );
 
-    const depositIx = await this.coinProgram.methods.deposit(amount, prediction).accounts({
-      initializer: initializer,
-      user: userAccount,
-      userTokenAccount: userTokenAccount,
-      pool: poolAccount,
-      poolTokenAccount: poolTokenAccount,
-      mintAddress: USDC_DEV,
-    })
-    return {depositIx}
+    const depositIx = await this.coinProgram.methods
+      .deposit(amount, prediction)
+      .accounts({
+        initializer: initializer,
+        user: userAccount,
+        userTokenAccount: userTokenAccount,
+        pool: poolAccount,
+        poolTokenAccount: poolTokenAccount,
+        mintAddress: USDC_DEV,
+      })
+      .rpc();
+    return { depositIx };
+  }
+
+  async selectWinningPool(
+    poolNames: string,
+    poolPredictions: number[],
+    poolCoinPrice: number[]
+  ) {
+    const selectedWinnerPoolIx = await this.coinProgram.methods
+      .selectWinningPool(poolNames, poolPredictions, poolCoinPrice)
+      .accounts({
+        clock: SYSVAR_CLOCK_PUBKEY,
+      })
+      .rpc();
+    return { selectedWinnerPoolIx };
+  }
+
+  async payWinningPoolUser(
+    owner: PublicKey,
+    initializer: PublicKey,
+    poolName: string,
+    prizeAmount: number
+  ) {
+    const [userAccount] = await this.findProgramAddress(
+      [
+        initializer.toBytes(),
+        Buffer.from(anchor.utils.bytes.utf8.encode("user")),
+      ],
+      this.coinProgram.programId
+    );
+
+    const [userTokenAccount] = await this.findProgramAddress(
+      [
+        initializer.toBytes(),
+        Buffer.from(anchor.utils.bytes.utf8.encode("user_wallet")),
+      ],
+      this.coinProgram.programId
+    );
+
+    const [poolTokenAccount] = await this.findProgramAddress(
+      [
+        initializer.toBytes(),
+        Buffer.from(anchor.utils.bytes.utf8.encode("pool_wallet")),
+      ],
+      this.coinProgram.programId
+    );
+
+    const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from(anchor.utils.bytes.utf8.encode(poolName))],
+      this.coinProgram.programId
+    );
+
+    const payWinningPoolUserIx = await this.coinProgram.methods
+      .payWinningPoolUser(poolName, prizeAmount)
+      .accounts({
+        owner: initializer,
+        user: userAccount,
+        userTokenAccount: userTokenAccount,
+        pool: poolAccount,
+        poolTokenAccount: poolTokenAccount,
+        mintAddress: USDC_DEV,
+      })
+      .rpc();
+    return { payWinningPoolUserIx };
   }
 }
