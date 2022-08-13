@@ -1,8 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/Landing.module.css";
 import { Button, Space } from "antd";
+import { Wallet } from "@project-serum/anchor";
+import {
+  AnchorWallet,
+  useAnchorWallet,
+  useConnection,
+} from "@solana/wallet-adapter-react";
+import { initCoinClient } from "../client/common/init";
+import { CoinClient } from "../client/coinWar.client";
+import { PublicKey } from "@solana/web3.js";
 
 const Admin = ({ setGame, setPools }: any) => {
+  const wallet = useAnchorWallet();
+  const [client, setClient] = useState<CoinClient | null>(null);
+  const [isTxLoading, setIsTxLoading] = useState<boolean>(false);
+  const [destination, setDestination] = useState("");
+  const [mintKey, setMintKey] = useState("");
+
+  // useEffect(() => {
+  //   (async () => {
+  //     if (wallet) {
+  //       try {
+  //         const coinClient = await initCoinClient(wallet as Wallet);
+  //         setClient(coinClient);
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   })();
+  // }, [wallet]);
+
+  const handleCreatePool = async () => {
+    const mintPub = new PublicKey(mintKey);
+    if (client && wallet && mintKey && destination) {
+      setIsTxLoading(true);
+      try {
+        const { createPoolIx, poolTokenAccount } = await client.createPool(
+          wallet.publicKey,
+          "Solana",
+          mintPub
+        );
+        console.log("Create pool:", createPoolIx, poolTokenAccount);
+      } catch (err) {
+        setIsTxLoading(false);
+        console.log(err);
+      }
+    }
+  };
+
   return (
     <div>
       <h1 className={styles.logo}>COINWARS</h1>
