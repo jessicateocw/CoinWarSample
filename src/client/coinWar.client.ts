@@ -47,7 +47,7 @@ export class CoinClient extends AccountUtils {
     }
   }
 
-  async createPool(manager: PublicKey, poolName: string, mintKey: PublicKey) {
+  async createPool(manager: PublicKey, poolName: string) {
     const [poolTokenAccount] = await this.findProgramAddress(
       [
         manager.toBytes(),
@@ -80,16 +80,16 @@ export class CoinClient extends AccountUtils {
   async createUser(initializer: PublicKey) {
     const [userAccount] = await this.findProgramAddress(
       [
-        initializer.toBytes(),
         Buffer.from(anchor.utils.bytes.utf8.encode("user")),
+        initializer.toBytes(),
       ],
       this.coinProgram.programId
     );
 
     const [userTokenAccount] = await this.findProgramAddress(
       [
-        initializer.toBytes(),
         Buffer.from(anchor.utils.bytes.utf8.encode("user_wallet")),
+        userAccount.toBytes(),
       ],
       this.coinProgram.programId
     );
@@ -156,17 +156,34 @@ export class CoinClient extends AccountUtils {
   }
 
   async selectWinningPool(
-    poolNames: string,
+    poolNames: string[],
     poolPredictions: number[],
-    poolCoinPrice: number[]
+    poolCoinPrices: number[]
   ) {
+
+    console.log("enter");
+
+    let winning_index = 0;
+    let current_smallest =100000.000;
+
+    for(let i = 0; i < poolPredictions.length; i++) {
+      let delta = (poolPredictions[i] - poolCoinPrices[i]);
+      if(delta < current_smallest){
+        current_smallest = delta;
+        winning_index = i;
+      }
+    }
+    
+    
     const selectedWinnerPoolIx = await this.coinProgram.methods
-      .selectWinningPool(poolNames, poolPredictions, poolCoinPrice)
+      .selectWinningPool(Buffer.from([1,2,3,4]), poolPredictions, poolCoinPrices)
       .accounts({
         clock: SYSVAR_CLOCK_PUBKEY,
       })
       .rpc();
-    return { selectedWinnerPoolIx };
+
+      console.log(selectedWinnerPoolIx);
+    return { selectedWinnerPoolIx, winning_index };
   }
 
   async payWinningPoolUser(
@@ -182,20 +199,22 @@ export class CoinClient extends AccountUtils {
     //   ],
     //   this.coinProgram.programId
     // );
-    const userAccounts = await this.coinProgram.account.user.all([
-      {
-        memcmp: {
-          offset:
-            8 + // Discriminator.
-            4, // Topic string prefix.
-          bytes: bs58.encode(Buffer.from("Solana")),
-        },
-      },
-    ]);
+
+    // [
+    //   {
+    //     memcmp: {
+    //       offset:
+    //         8 ,// Discriminator.
+    //       bytes: bs58.encode(Buffer.from("Solana")),
+    //     },
+    //   },
+    // ]
+    const userAccounts = await this.coinProgram.account.user.all();
+
+    //console.log("us", userAccounts);
 
     const [poolTokenAccount] = await this.findProgramAddress(
       [
-        initializer.toBytes(),
         Buffer.from(anchor.utils.bytes.utf8.encode("pool_wallet")),
       ],
       this.coinProgram.programId
@@ -209,17 +228,17 @@ export class CoinClient extends AccountUtils {
     userAccounts.every(async (userAccount) => {
       const [userTokenAccount] = await this.findProgramAddress(
         [
-          //userAccount.account.toBytes(),
           Buffer.from(anchor.utils.bytes.utf8.encode("user_wallet")),
+          userAccount.publicKey.toBytes(),
         ],
         this.coinProgram.programId
       );
 
       const payWinningPoolUserIx = await this.coinProgram.methods
-        .payWinningPoolUser(poolName, prizeAmount)
+        .payWinningPoolUser(userAccount.publicKey,poolName, prizeAmount)
         .accounts({
           owner: initializer,
-          //user: userAccount.account.toBase58(),
+          user: userAccount.publicKey,
           userTokenAccount: userTokenAccount,
           pool: poolAccount,
           poolTokenAccount: poolTokenAccount,

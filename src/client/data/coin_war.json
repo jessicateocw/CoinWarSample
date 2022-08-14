@@ -112,7 +112,7 @@
           }
         },
         {
-          "name": "poolCoinPrice",
+          "name": "poolCoinPrices",
           "type": {
             "vec": "f64"
           }
@@ -165,6 +165,10 @@
         }
       ],
       "args": [
+        {
+          "name": "userKey",
+          "type": "publicKey"
+        },
         {
           "name": "poolName",
           "type": "string"
@@ -551,6 +555,6 @@
     }
   ],
   "metadata": {
-    "address": "FNUYoJBy4jY3HqGJ6tFb8koxv9n3BjvqApgNBNpNjc9v"
+    "address": "9Qkcb9Va3RjChW8vwfyxZrTGdRQEYhr3kJpP4kMVTfE2"
   }
 }

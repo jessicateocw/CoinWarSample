@@ -110,7 +110,7 @@ export type CoinWar = {
           }
         },
         {
-          "name": "poolCoinPrice",
+          "name": "poolCoinPrices",
           "type": {
             "vec": "f64"
           }
@@ -163,6 +163,10 @@ export type CoinWar = {
         }
       ],
       "args": [
+        {
+          "name": "userKey",
+          "type": "publicKey"
+        },
         {
           "name": "poolName",
           "type": "string"
@@ -658,7 +662,7 @@ export const IDL: CoinWar = {
           }
         },
         {
-          "name": "poolCoinPrice",
+          "name": "poolCoinPrices",
           "type": {
             "vec": "f64"
           }
@@ -711,6 +715,10 @@ export const IDL: CoinWar = {
         }
       ],
       "args": [
+        {
+          "name": "userKey",
+          "type": "publicKey"
+        },
         {
           "name": "poolName",
           "type": "string"

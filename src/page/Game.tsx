@@ -74,22 +74,28 @@ const Game = ({ pools, game }: any) => {
 
     if (client && wallet) {
       try {
-        const { depositIx } = await client.deposit(
-          wallet.publicKey,
-          parseInt(stakeValue),
-          parseInt(predictionValue),
-          "Solana"
-        );
+        const {createUserIx} = await client.createUser(wallet.publicKey);
 
-        //check deposit status
-        //load success or non success warning
-        if (depositIx) {
-          handleOk();
-          success();
-        } else {
-          error();
+        console.log('created user', createUserIx);
+        if(createUserIx) {
+          const { depositIx } = await client.deposit(
+            wallet.publicKey,
+            parseInt(stakeValue),
+            parseInt(predictionValue),
+            "Solana"
+          );
+  
+          //check deposit status
+          //load success or non success warning
+          if (depositIx) {
+            handleOk();
+            success();
+          } else {
+            error();
+          }
+          console.log("Create depositIx:", depositIx);
         }
-        console.log("Create depositIx:", depositIx);
+        
       } catch (err) {
         console.log(err);
         error();

@@ -5,7 +5,9 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { Wallet } from "@project-serum/anchor";
 import { initCoinClient } from "../client/common/init";
 import { CoinClient } from "../client/coinWar.client";
-import { PublicKey } from "@solana/web3.js";
+import { Connection, PublicKey } from "@solana/web3.js";
+
+import { deserializeUnchecked } from "borsh";
 
 const Admin = ({ setGame, setPools }: any) => {
   const wallet = useAnchorWallet();
@@ -33,17 +35,18 @@ const Admin = ({ setGame, setPools }: any) => {
   }, [wallet]);
 
   const handleCreatePool = async () => {
-    const mintPub = new PublicKey(mintKey);
-    if (client && wallet && mintKey && destination) {
+    //const mintPub = new PublicKey(mintKey);
+    //console.log('enter')
+    if (client && wallet) {
       setIsTxLoading(true);
       try {
+        //console.log('enter pool create', wallet.publicKey)
         const { createPoolIx, poolTokenAccount } = await client.createPool(
           wallet.publicKey,
-          "Solana",
-          mintPub
+          "Solana"
         );
         console.log("Create pool:", createPoolIx, poolTokenAccount);
-      } catch (err) {
+      }catch (err) {
         setIsTxLoading(false);
         console.log(err);
       }
@@ -51,15 +54,17 @@ const Admin = ({ setGame, setPools }: any) => {
   };
 
   const handleEndGame = async () => {
-    const mintPub = new PublicKey(mintKey);
-    if (client && wallet && mintKey && destination) {
+    if (client && wallet) {
       setIsTxLoading(true);
 
       //TODO: the pool values from ?
-      const poolPredictions = [0, 1, 2];
-      const poolCoinPrice = [0, 1, 2];
+      const poolNames = ["Solana", "BNB", "Polygon", "Ethereum"];
+      const poolPredictions = [46, 300, 0.5, 1500]; //userPredictions
+      //TODO!!!!  Change before DEMO 
+      const poolCoinPrice = [46, 1, 2, 4]; //current price
 
       try {
+        console.log('trying');
         setGame({
           id: 0,
           // stringy Json type of startTime
@@ -68,16 +73,20 @@ const Admin = ({ setGame, setPools }: any) => {
           prizeAmount: "100000 SOL",
         });
 
-        const result = await client.selectWinningPool(
-          "Solana",
+        console.log('end set Game');
+        const { selectedWinnerPoolIx, winning_index } = await client.selectWinningPool(
+          poolNames,//poolname array,
           poolPredictions,
           poolCoinPrice
         );
 
-        if (result) {
+        console.log('selectedWinnerPool', winning_index);
+
+        console.log('client', client);
+        if (selectedWinnerPoolIx) {
           //Amount set to be calculated
           //  payout = at_risk_stake * MAX(-0.25, MIN(0.25, payout_factor * (corr * corr_multiplier + tc * tc_multiplier)))
-          const prizeAmount = 0;
+          const prizeAmount = Math.floor(Math.random()* 5000) + 5000;
           await client.payWinningPoolUser(
             wallet.publicKey,
             "Solana",
@@ -97,7 +106,7 @@ const Admin = ({ setGame, setPools }: any) => {
       {/* Owner to create new game and new pool  */}
       <Space>
         {/* Create Pool */}
-        <Button onClick={() => {}}>CREATE POOL</Button>
+        <Button onClick={() => {handleCreatePool()}}>CREATE POOL</Button>
 
         <Button
           value="large"

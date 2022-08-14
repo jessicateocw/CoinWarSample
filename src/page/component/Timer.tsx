@@ -39,7 +39,7 @@ const ShowCounter = ({ days, hours, minutes, seconds }: any) => {
 const GameEnd = () => {
   return (
     <div className="expired-notice">
-      <span>Game END !!!</span>
+      <span>YOU WON !!</span>
       <p>Winners collect your prize.</p>
       <Winner />
     </div>

@@ -3,9 +3,9 @@
 //TODO: Should called from DB
 var datajson = [
   { poolName: "Solana", userGroup: ["userAdd"], totalAmount: 100 },
-  { poolName: "Tether", userGroup: ["userAdd"], totalAmount: 20 },
-  { poolName: "Ethereum", userGroup: ["userAdd"], totalAmount: 40 },
-  { poolName: "BNB", userGroup: ["userAdd"], totalAmount: 100 },
+  { poolName: "BNB", userGroup: ["userAdd"], totalAmount: 20 },
+  { poolName: "Polygon", userGroup: ["userAdd"], totalAmount: 40 },
+  { poolName: "Ethereum", userGroup: ["userAdd"], totalAmount: 100 },
 ];
 
 //TODO: Should called from DB
@@ -17,5 +17,6 @@ const game = {
   prizeAmount: "100000 SOL",
 };
 //global json
+
 
 export { datajson, game };
