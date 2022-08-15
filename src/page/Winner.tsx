@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 const Winner = () => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [isWinner, setIsWinner] = useState(false);
+  const [isWinner, setIsWinner] = useState(true);
 
   //Functions for the Modal Pop up.
   const handleOk = () => {
@@ -30,7 +30,6 @@ const Winner = () => {
         Claim reward!
       </Button>
       <Modal
-        title="Welcome Winner"
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -38,6 +37,13 @@ const Winner = () => {
           <Button key="back" onClick={handleCancel}>
             Return
           </Button>,
+          ,
+        ]}
+      >
+        {/* <div className={styles.solana_coin} /> */}
+        <div className="model">
+          <h1>Welcome Winner</h1>
+          <p>Lucky you!!</p>
           <Button
             key="submit"
             type="primary"
@@ -45,12 +51,8 @@ const Winner = () => {
             onClick={handleOk}
           >
             Collect
-          </Button>,
-        ]}
-      >
-        {/* <div className={styles.solana_coin} /> */}
-        <p>Winner Gets this POP UP </p>
-        <p>Lucky you!!! Collect your prize</p>
+          </Button>
+        </div>
       </Modal>
     </div>
   );

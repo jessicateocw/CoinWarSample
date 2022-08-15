@@ -1,18 +1,9 @@
-import {
-  Button,
-  Input,
-  message,
-  Modal,
-  Space,
-  Row,
-  Col,
-  Typography,
-} from "antd";
+import { Button, Input, message, Modal, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { CountdownTimer } from "./component/Timer";
 import "../styles/Game.less";
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { Wallet } from "@project-serum/anchor";
 import { initCoinClient } from "../client/common/init";
 import { CoinClient } from "../client/coinWar.client";
@@ -23,7 +14,7 @@ interface PoolData {
   totalAmount: number;
 }
 
-const Game = ({ pools, game }: any) => {
+const Game = ({ pools, game, setPools }: any) => {
   var defaultPool: PoolData = {
     poolName: "",
     userGroup: [],
@@ -34,6 +25,7 @@ const Game = ({ pools, game }: any) => {
   const [stakeValue, setStakeValue] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   /**
    * Wallet Configurations
@@ -69,34 +61,46 @@ const Game = ({ pools, game }: any) => {
     message.error("This is an error message");
   };
 
+  const enterHardCode = (index: number) => {
+    //change the pools accordingly
+    var updatePool = pools[index];
+    updatePool.userGroup.push("PublicKey");
+    updatePool.totalAmount += parseInt(stakeValue);
+
+    // console.log(updatePool);
+    // console.log(pools);
+    handleOk();
+  };
+
   const enterUserToPool = async () => {
     //trigger client call to add user token to pool token account create user and deposit
 
     if (client && wallet) {
       try {
-        console.log("test")
-        const {createUserIx} = await client.createUser(wallet.publicKey);
+        console.log("test");
+        const { createUserIx } = await client.createUser(wallet.publicKey);
 
-        console.log('created user', createUserIx);
-        if(createUserIx) {
+        console.log("created user", createUserIx);
+        if (createUserIx) {
           const { depositIx } = await client.deposit(
             wallet.publicKey,
             parseInt(stakeValue),
             parseInt(predictionValue),
             "Solana"
           );
-  
+
           //check deposit status
           //load success or non success warning
           if (depositIx) {
             handleOk();
             success();
-          } else {
-            error();
           }
+          // else {
+          //   error();
+          // }
+          enterHardCode(currentIndex);
           console.log("Create depositIx:", depositIx);
         }
-        
       } catch (err) {
         console.log(err);
         error();
@@ -148,6 +152,7 @@ const Game = ({ pools, game }: any) => {
               key={index}
               onClick={() => {
                 handlePoolSelection(pool);
+                setCurrentIndex(index);
               }}
             >
               {pool.poolName}
@@ -157,7 +162,7 @@ const Game = ({ pools, game }: any) => {
       </Space>
 
       <Modal
-        title={currentPool.poolName}
+        // title={currentPool.poolName}
         visible={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -169,7 +174,9 @@ const Game = ({ pools, game }: any) => {
             key="submit"
             type="primary"
             loading={loading}
-            onClick={enterUserToPool}
+            onClick={() => {
+              enterUserToPool();
+            }}
           >
             Join Coin Pool
           </Button>,
@@ -177,8 +184,9 @@ const Game = ({ pools, game }: any) => {
       >
         {/* <div className={styles.solana_coin} /> */}
         <div className="model">
+          <h1>{currentPool.poolName}</h1>
           <p>Participants: {currentPool.userGroup.length}</p>
-          <p>Current amount (USDC): {currentPool.totalAmount}</p>
+          <p>Total amount in Current Pool(USDC): {currentPool.totalAmount}</p>
           <Space direction="vertical" className="input">
             <Typography>Predict token price:</Typography>
             <Input

@@ -21,7 +21,7 @@ const Main = () => {
       {isAdmin ? (
         <Admin setGame={setGame} setPools={setPools} />
       ) : (
-        <Game pools={pools} game={currentGame} />
+        <Game pools={pools} setPools={setPools} game={currentGame} />
       )}
       <br />
 
