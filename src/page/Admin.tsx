@@ -5,7 +5,7 @@ import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { Wallet } from "@project-serum/anchor";
 import { initCoinClient } from "../client/common/init";
 import { CoinClient } from "../client/coinWar.client";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { Connection, PublicKey, Transaction } from "@solana/web3.js";
 
 import { deserializeUnchecked } from "borsh";
 

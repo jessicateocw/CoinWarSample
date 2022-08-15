@@ -49,10 +49,7 @@ export class CoinClient extends AccountUtils {
 
   async createPool(manager: PublicKey, poolName: string) {
     const [poolTokenAccount] = await this.findProgramAddress(
-      [
-        manager.toBytes(),
-        Buffer.from(anchor.utils.bytes.utf8.encode("pool_wallet")),
-      ],
+      [Buffer.from(anchor.utils.bytes.utf8.encode("pool_wallet"))],
       this.coinProgram.programId
     );
 
@@ -64,6 +61,7 @@ export class CoinClient extends AccountUtils {
     const utf8 = require("utf8");
 
     var pool = utf8.encode(poolName);
+    console.log('pool: ', pool);
 
     const createPoolIx = await this.coinProgram.methods
       .createPool(pool)
@@ -78,12 +76,14 @@ export class CoinClient extends AccountUtils {
   }
 
   async createUser(initializer: PublicKey) {
+    console.log(this.coinProgram.programId.toString(), "1")
     const [userAccount] = await this.findProgramAddress(
       [
         Buffer.from(anchor.utils.bytes.utf8.encode("user")),
         initializer.toBytes(),
       ],
       this.coinProgram.programId
+      
     );
 
     const [userTokenAccount] = await this.findProgramAddress(

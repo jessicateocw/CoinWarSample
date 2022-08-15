@@ -74,6 +74,7 @@ const Game = ({ pools, game }: any) => {
 
     if (client && wallet) {
       try {
+        console.log("test")
         const {createUserIx} = await client.createUser(wallet.publicKey);
 
         console.log('created user', createUserIx);
