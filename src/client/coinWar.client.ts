@@ -54,7 +54,7 @@ export class CoinClient extends AccountUtils {
     );
 
     const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(anchor.utils.bytes.utf8.encode(poolName))],
+      [new anchor.BN(1).toArrayLike(Buffer, 'le', 8)],
       this.coinProgram.programId
     );
 
@@ -62,9 +62,12 @@ export class CoinClient extends AccountUtils {
 
     var pool = utf8.encode(poolName);
     console.log('pool: ', pool);
+    console.log('poolAccount: ', poolAccount.toBase58())
+    console.log('poolTokenAccount: ', poolTokenAccount.toBase58())
+
 
     const createPoolIx = await this.coinProgram.methods
-      .createPool(pool)
+      .createPool(1)
       .accounts({
         owner: manager,
         pool: poolAccount,
@@ -94,6 +97,11 @@ export class CoinClient extends AccountUtils {
       this.coinProgram.programId
     );
 
+    console.log('userAccount: ', userAccount.toBase58())
+
+    console.log('userTokenAccount: ', userTokenAccount.toBase58())
+
+
     const createUserIx = await this.coinProgram.methods
       .createUser()
       .accounts({
@@ -114,30 +122,29 @@ export class CoinClient extends AccountUtils {
   ) {
     const [userAccount] = await this.findProgramAddress(
       [
-        initializer.toBytes(),
         Buffer.from(anchor.utils.bytes.utf8.encode("user")),
+        initializer.toBytes(),
       ],
       this.coinProgram.programId
     );
 
     const [userTokenAccount] = await this.findProgramAddress(
       [
-        initializer.toBytes(),
         Buffer.from(anchor.utils.bytes.utf8.encode("user_wallet")),
+        initializer.toBytes(),
       ],
       this.coinProgram.programId
     );
 
     const [poolTokenAccount] = await this.findProgramAddress(
       [
-        initializer.toBytes(),
         Buffer.from(anchor.utils.bytes.utf8.encode("pool_wallet")),
       ],
       this.coinProgram.programId
     );
 
     const [poolAccount] = await anchor.web3.PublicKey.findProgramAddress(
-      [Buffer.from(anchor.utils.bytes.utf8.encode(poolName))],
+      [Buffer.from(anchor.utils.bytes.utf8.encode("Solana"))],
       this.coinProgram.programId
     );
 
