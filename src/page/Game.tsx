@@ -154,7 +154,7 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
     setTimeout(() => {
       setLoading(false);
       setIsModalVisible(false);
-    }, 3000);
+    }, 5000);
   };
 
   const handleCancel = () => {
