@@ -70,7 +70,7 @@ const Admin = ({ setGame, setPools }: any) => {
           // stringy Json type of startTime
           startTime: "2022-07-26T07:46:36.611Z",
           endTime: "2022-08-06T07:46:36.611Z",
-          prizeAmount: "100000 SOL",
+          prizeAmount: "9100 USDC",
         });
 
         console.log('end set Game');
@@ -115,9 +115,9 @@ const Admin = ({ setGame, setPools }: any) => {
             setGame({
               id: 0,
               // stringy Json type of startTime
-              startTime: "2022-07-26T07:46:36.611Z",
-              endTime: "2022-10-06T07:46:36.611Z",
-              prizeAmount: "100000 SOL",
+              startTime: "2022-08-15T07:46:36.611Z",
+              endTime: "2022-08-16T07:46:36.611Z",
+              prizeAmount: "9100 USDC",
             });
           }}
         >

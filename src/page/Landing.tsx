@@ -60,23 +60,23 @@ const FeaturesContent = ({ myRef }: any) => {
 
       <Row gutter={16} className={styles.feature_content}>
         <Col span={6}>
-          <Card title="Coin name" bordered={false}>
-            Card content
+          <Card title="Solana" bordered={false}>
+            39000 USDC
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Coin name" bordered={false}>
-            Card content
+          <Card title="BNB" bordered={false}>
+            4000 USDC
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Coin name" bordered={false}>
-            Card content
+          <Card title="Polygon" bordered={false}>
+            14000 USDC
           </Card>
         </Col>
         <Col span={6}>
-          <Card title="Coin name" bordered={false}>
-            Card content
+          <Card title="Ethereum" bordered={false}>
+            23000 USDC
           </Card>
         </Col>
       </Row>
