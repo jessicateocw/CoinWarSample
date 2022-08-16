@@ -14,7 +14,7 @@ interface PoolData {
   totalAmount: number;
 }
 
-const Game = ({ pools, game, setPools }: any) => {
+const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
   var defaultPool: PoolData = {
     poolName: "",
     userGroup: [],
@@ -32,11 +32,7 @@ const Game = ({ pools, game, setPools }: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   //user in pool
   const [isPool, setIsPool] = useState(false);
-  const [userEntry, setUserEntry] = useState({
-    predictionValue: "",
-    stakeValue: "",
-    poolName: "",
-  });
+
   /**
    * Wallet Configurations
    **/
@@ -66,13 +62,19 @@ const Game = ({ pools, game, setPools }: any) => {
     })();
   }, [wallet]);
 
+  useEffect(() => {
+    if (userEntry.poolName !== "") {
+      setIsPool(true);
+    }
+  }, []);
+
   const success = () => {
     message.success("This is a success message" + predictionValue);
   };
 
-  // const error = () => {
-  //   message.error("This is an error message");
-  // };
+  const error = () => {
+    message.error("Input values missing");
+  };
 
   const enterHardCode = (index: number) => {
     //change the pools accordingly
@@ -96,7 +98,7 @@ const Game = ({ pools, game, setPools }: any) => {
   const enterUserToPool = async () => {
     //trigger client call to add user token to pool token account create user and deposit
 
-    if (client && wallet) {
+    if (client && wallet && predictionValue && stakeValue) {
       try {
         console.log("test");
         handleOk();
@@ -126,6 +128,8 @@ const Game = ({ pools, game, setPools }: any) => {
         //error();
       }
       enterHardCode(currentIndex);
+    } else {
+      error();
     }
   };
 

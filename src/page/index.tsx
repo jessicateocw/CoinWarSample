@@ -11,6 +11,11 @@ const Main = () => {
 
   const [pools, setPools] = useState(datajson);
   const [currentGame, setGame] = useState(game);
+  const [userEntry, setUserEntry] = useState({
+    predictionValue: "",
+    stakeValue: "",
+    poolName: "",
+  });
 
   const handleChangeView = () => {
     setAdmin(!isAdmin);
@@ -21,7 +26,13 @@ const Main = () => {
       {isAdmin ? (
         <Admin setGame={setGame} setPools={setPools} />
       ) : (
-        <Game pools={pools} setPools={setPools} game={currentGame} />
+        <Game
+          pools={pools}
+          setPools={setPools}
+          game={currentGame}
+          userEntry={userEntry}
+          setUserEntry={setUserEntry}
+        />
       )}
       <br />
 
