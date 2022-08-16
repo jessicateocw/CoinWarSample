@@ -42,6 +42,8 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
   const [isPrediction, setIsPrediction] = useState(false);
   const [isStake, setIsStake] = useState(false);
 
+  const [gameEnd, setGameEnd] = useState(false);
+
   // console.log(wallet);
   useEffect(() => {
     (async () => {
@@ -307,9 +309,17 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
     );
   };
 
+  // const checkGameEnd = (index: number) => {
+  //   if (gameEnd) {
+  //     return index == 0 ? "winButton" : "gameButton";
+  //   } else {
+  //     return currentIndex !== index ? "gameButton" : "selectedButton";
+  //   }
+  // };
+
   return (
     <div id="status">
-      <CountdownTimer target={game.endTime} />
+      <CountdownTimer target={game.endTime} setGameEnd={setGameEnd} />
       <h1>Current Prize: {game.prizeAmount} </h1>
 
       {isPool ? (
@@ -321,7 +331,7 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
                   currentIndex !== index ? "gameButton" : "selectedButton"
                 }
                 key={index}
-                disabled={currentIndex !== index}
+                disabled={gameEnd ? true : currentIndex !== index}
                 onClick={() => {
                   handleViewSelected();
                 }}

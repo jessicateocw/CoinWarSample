@@ -3,12 +3,14 @@ import { useCountdown } from "./useCountdown";
 import "../../styles/Countdown.css";
 import Winner from "../Winner";
 
-const CountdownTimer = ({ target }: any) => {
+const CountdownTimer = ({ target, setGameEnd }: any) => {
   const [days, hours, minutes, seconds] = useCountdown(target);
 
   if (days + hours + minutes + seconds <= 0) {
+    setGameEnd(true);
     return <GameEnd />;
   } else {
+    setGameEnd(false);
     return (
       <ShowCounter
         days={days}
