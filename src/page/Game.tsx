@@ -2,7 +2,7 @@ import { Button, Input, message, Modal, Space, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { CountdownTimer } from "./component/Timer";
 import "../styles/Game.less";
-import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+// import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { Wallet } from "@project-serum/anchor";
 import { initCoinClient } from "../client/common/init";
@@ -21,17 +21,30 @@ const Game = ({ pools, game, setPools }: any) => {
     totalAmount: 0,
   };
   const [currentPool, setCurrentPool] = useState(defaultPool);
+
+  //Popup values
   const [predictionValue, setPredictionValue] = useState("");
   const [stakeValue, setStakeValue] = useState("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Selected Pool
+  const [currentIndex, setCurrentIndex] = useState(0);
+  //user in pool
+  const [isPool, setIsPool] = useState(false);
+  const [userEntry, setUserEntry] = useState({
+    predictionValue: "",
+    stakeValue: "",
+    poolName: "",
+  });
   /**
    * Wallet Configurations
    **/
   const wallet = useAnchorWallet();
   const [client, setClient] = useState<CoinClient | null>(null);
+
+  const [isPrediction, setIsPrediction] = useState(false);
+  const [isStake, setIsStake] = useState(false);
 
   // console.log(wallet);
   useEffect(() => {
@@ -57,15 +70,23 @@ const Game = ({ pools, game, setPools }: any) => {
     message.success("This is a success message" + predictionValue);
   };
 
-  const error = () => {
-    message.error("This is an error message");
-  };
+  // const error = () => {
+  //   message.error("This is an error message");
+  // };
 
   const enterHardCode = (index: number) => {
     //change the pools accordingly
     var updatePool = pools[index];
     updatePool.userGroup.push("PublicKey");
     updatePool.totalAmount += parseInt(stakeValue);
+
+    setIsPool(true);
+
+    var currentEntry = userEntry;
+    currentEntry.predictionValue = predictionValue;
+    currentEntry.stakeValue = stakeValue;
+    currentEntry.poolName = pools[index].poolName;
+    setUserEntry(currentEntry);
 
     // console.log(updatePool);
     // console.log(pools);
@@ -78,7 +99,7 @@ const Game = ({ pools, game, setPools }: any) => {
     if (client && wallet) {
       try {
         console.log("test");
-        handleOk()
+        handleOk();
         const { createUserIx } = await client.createUser(wallet.publicKey);
 
         console.log("created user", createUserIx);
@@ -89,7 +110,7 @@ const Game = ({ pools, game, setPools }: any) => {
             parseInt(predictionValue),
             "Solana"
           );
-
+          console.log("Create depositIx:", depositIx);
           //check deposit status
           //load success or non success warning
           if (depositIx) {
@@ -99,13 +120,12 @@ const Game = ({ pools, game, setPools }: any) => {
           // else {
           //   error();
           // }
-          enterHardCode(currentIndex);
-          console.log("Create depositIx:", depositIx);
         }
       } catch (err) {
         console.log(err);
-        // error();
+        //error();
       }
+      enterHardCode(currentIndex);
     }
   };
 
@@ -116,7 +136,7 @@ const Game = ({ pools, game, setPools }: any) => {
   ) => {
     const { value: inputValue } = e.target;
     e.preventDefault();
-    if (parameter == "predict") {
+    if (parameter === "predict") {
       setPredictionValue(inputValue);
     } else {
       setStakeValue(inputValue);
@@ -141,27 +161,8 @@ const Game = ({ pools, game, setPools }: any) => {
     setCurrentPool(pool);
   };
 
-  return (
-    <div id="status">
-      <CountdownTimer target={game.endTime} />
-      <h1>Current Prize: {game.prizeAmount} </h1>
-      <Space className="container">
-        {pools.map((pool: PoolData, index: number) => (
-          <div>
-            <Button
-              className="gameButton"
-              key={index}
-              onClick={() => {
-                handlePoolSelection(pool);
-                setCurrentIndex(index);
-              }}
-            >
-              {pool.poolName}
-            </Button>
-          </div>
-        ))}
-      </Space>
-
+  const selectPopup = () => {
+    return (
       <Modal
         // title={currentPool.poolName}
         visible={isModalVisible}
@@ -209,6 +210,142 @@ const Game = ({ pools, game, setPools }: any) => {
           </Space>
         </div>
       </Modal>
+    );
+  };
+
+  const handleViewSelected = () => {
+    setIsModalVisible(true);
+  };
+
+  const selectedPopup = () => {
+    // let isPrediction = false;
+    // let isStake = false;
+    return (
+      <Modal
+        // title={currentPool.poolName}
+        visible={isModalVisible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={[
+          <Button key="back" onClick={handleCancel}>
+            Close
+          </Button>,
+        ]}
+      >
+        {/* <div className={styles.solana_coin} /> */}
+        <div className="model">
+          <h1>{userEntry.poolName}</h1>
+          <p>Participants: {currentPool.userGroup.length}</p>
+          <p>Total amount in Current Pool(USDC): {currentPool.totalAmount}</p>
+          <Space direction="vertical" className="input">
+            {isPrediction ? (
+              <>
+                <Typography>Change Prediction</Typography>
+                <Input
+                  size="large"
+                  placeholder="Predict token price: "
+                  onChange={(event: any) => {
+                    handleChange(event, "predict");
+                  }}
+                />
+                <Button
+                  onClick={() => {
+                    setIsPrediction(false);
+                  }}
+                >
+                  Change
+                </Button>
+              </>
+            ) : (
+              <Button
+                className="changeButton"
+                onClick={() => {
+                  setIsPrediction(true);
+                }}
+              >
+                {`Prediction :  ` + userEntry.predictionValue}
+              </Button>
+            )}
+
+            <br />
+
+            {isStake ? (
+              <>
+                <Typography>Change Stake</Typography>
+                <Input
+                  size="large"
+                  placeholder="Insert Staking Amount: "
+                  onChange={(event: any) => {
+                    handleChange(event, "stake");
+                  }}
+                />
+                <Button
+                  onClick={() => {
+                    setIsStake(false);
+                  }}
+                >
+                  Change
+                </Button>
+              </>
+            ) : (
+              <Button
+                className="changeButton"
+                onClick={() => {
+                  setIsStake(true);
+                }}
+              >
+                {`Stake :  ` + userEntry.stakeValue}
+              </Button>
+            )}
+          </Space>
+        </div>
+      </Modal>
+    );
+  };
+
+  return (
+    <div id="status">
+      <CountdownTimer target={game.endTime} />
+      <h1>Current Prize: {game.prizeAmount} </h1>
+
+      {isPool ? (
+        <Space className="container">
+          {pools.map((pool: PoolData, index: number) => (
+            <div>
+              <Button
+                className={
+                  currentIndex !== index ? "gameButton" : "selectedButton"
+                }
+                key={index}
+                disabled={currentIndex !== index}
+                onClick={() => {
+                  handleViewSelected();
+                }}
+              >
+                {pool.poolName}
+              </Button>
+            </div>
+          ))}
+        </Space>
+      ) : (
+        <Space className="container">
+          {pools.map((pool: PoolData, index: number) => (
+            <div>
+              <Button
+                className="gameButton"
+                key={index}
+                onClick={() => {
+                  handlePoolSelection(pool);
+                  setCurrentIndex(index);
+                }}
+              >
+                {pool.poolName}
+              </Button>
+            </div>
+          ))}
+        </Space>
+      )}
+      {isPool ? selectedPopup() : selectPopup()}
     </div>
   );
 };
