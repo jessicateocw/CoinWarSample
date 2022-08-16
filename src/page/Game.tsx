@@ -44,6 +44,12 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
 
   const [gameEnd, setGameEnd] = useState(false);
 
+/**
+ * Ticketing System
+ * */
+
+const [tickets, setTicket] = useState(0);
+
   // console.log(wallet);
   useEffect(() => {
     (async () => {
@@ -84,8 +90,11 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
     updatePool.userGroup.push("PublicKey");
     updatePool.totalAmount += parseInt(stakeValue);
 
-    setIsPool(true);
-
+    setTimeout(() => {
+      setIsPool(true);
+      handleOk();
+    }, 1000);
+    
     var currentEntry = userEntry;
     currentEntry.predictionValue = predictionValue;
     currentEntry.stakeValue = stakeValue;
@@ -94,7 +103,7 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
 
     // console.log(updatePool);
     // console.log(pools);
-    handleOk();
+    
   };
 
   const enterUserToPool = async () => {
@@ -121,15 +130,17 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
             handleOk();
             success();
           }
+          enterHardCode(currentIndex);
           // else {
           //   error();
           // }
         }
       } catch (err) {
         console.log(err);
+        enterHardCode(currentIndex);
         //error();
       }
-      enterHardCode(currentIndex);
+      
     } else {
       error();
     }
@@ -319,6 +330,10 @@ const Game = ({ pools, game, setPools, userEntry, setUserEntry }: any) => {
 
   return (
     <div id="status">
+{/* 
+      <div> Tickets: {tickets}
+      <Button>Buy</Button>
+      </div> */}
       <CountdownTimer target={game.endTime} setGameEnd={setGameEnd} />
       <h1>Current Prize: {game.prizeAmount} </h1>
 
