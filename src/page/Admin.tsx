@@ -46,7 +46,7 @@ const Admin = ({ setGame, setPools }: any) => {
           "Solana"
         );
         console.log("Create pool:", createPoolIx, poolTokenAccount);
-      }catch (err) {
+      } catch (err) {
         setIsTxLoading(false);
         console.log(err);
       }
@@ -60,11 +60,11 @@ const Admin = ({ setGame, setPools }: any) => {
       //TODO: the pool values from ?
       const poolNames = ["Solana", "BNB", "Polygon", "Ethereum"];
       const poolPredictions = [46, 300, 0.5, 1500]; //userPredictions
-      //TODO!!!!  Change before DEMO 
+      //TODO!!!!  Change before DEMO
       const poolCoinPrice = [46, 1, 2, 4]; //current price
 
       try {
-        console.log('trying');
+        console.log("trying");
         setGame({
           id: 0,
           // stringy Json type of startTime
@@ -73,20 +73,21 @@ const Admin = ({ setGame, setPools }: any) => {
           prizeAmount: "9100 USDC",
         });
 
-        console.log('end set Game');
-        const { selectedWinnerPoolIx, winning_index } = await client.selectWinningPool(
-          poolNames,//poolname array,
-          poolPredictions,
-          poolCoinPrice
-        );
+        console.log("end set Game");
+        const { selectedWinnerPoolIx, winning_index } =
+          await client.selectWinningPool(
+            poolNames, //poolname array,
+            poolPredictions,
+            poolCoinPrice
+          );
 
-        console.log('selectedWinnerPool', winning_index);
+        console.log("selectedWinnerPool", winning_index);
 
-        console.log('client', client);
+        console.log("client", client);
         if (selectedWinnerPoolIx) {
           //Amount set to be calculated
           //  payout = at_risk_stake * MAX(-0.25, MIN(0.25, payout_factor * (corr * corr_multiplier + tc * tc_multiplier)))
-          const prizeAmount = Math.floor(Math.random()* 5000) + 5000;
+          const prizeAmount = Math.floor(Math.random() * 5000) + 5000;
           await client.payWinningPoolUser(
             wallet.publicKey,
             "Solana",
@@ -106,7 +107,13 @@ const Admin = ({ setGame, setPools }: any) => {
       {/* Owner to create new game and new pool  */}
       <Space>
         {/* Create Pool */}
-        <Button onClick={() => {handleCreatePool()}}>CREATE POOL</Button>
+        <Button
+          onClick={() => {
+            handleCreatePool();
+          }}
+        >
+          CREATE POOL
+        </Button>
 
         <Button
           value="large"
@@ -116,7 +123,7 @@ const Admin = ({ setGame, setPools }: any) => {
               id: 0,
               // stringy Json type of startTime
               startTime: "2022-08-15T07:46:36.611Z",
-              endTime: "2022-08-16T07:46:36.611Z",
+              endTime: "2022-10-16T07:46:36.611Z",
               prizeAmount: "9100 USDC",
             });
           }}

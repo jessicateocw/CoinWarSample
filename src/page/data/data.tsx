@@ -103,7 +103,7 @@ const game = {
   id: 0,
   // stringy Json type of startTime
   startTime: "2022-08-15T07:46:36.611Z",
-  endTime: "2022-08-16T12:46:36.611Z",
+  endTime: "2022-10-16T12:46:36.611Z",
   prizeAmount: "9100 USDC",
 };
 //global json
